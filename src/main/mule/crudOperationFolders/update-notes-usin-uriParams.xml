@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	 <flow name="put:\notes\(id):application\json:note_api-config">
+        <ee:transform doc:name="Transform Message" doc:id="fd6530db-a1bb-4af6-a784-3fb0227a236f" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="updateVars" ><![CDATA[%dw 2.0
+output application/json
+
+var updateDate = now() as String {format: "yyyy-MM-dd"}
+---
+{
+	id:attributes.uriParams.id,
+	title:payload.title,
+	content:payload.content,
+	createdAt:updateDate,
+	updatedAt:updateDate
+	
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<db:update doc:name="Update" doc:id="e778a509-ef28-47ba-8196-850fb7be642f" config-ref="Database_Config">
+			<db:sql ><![CDATA[update b37_last_assignment set title=:title,content=:content,createdAt=:createdAt,updatedAt=:updatedAt where id=:id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[vars.updateVars]]]></db:input-parameters>
+		</db:update>
+		<ee:transform doc:name="Transform Message" doc:id="341e0685-6ff0-44f9-9635-fe20772bed0a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+    </flow>
+	</mule>

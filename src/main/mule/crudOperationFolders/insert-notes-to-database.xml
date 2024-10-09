@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+   <flow name="post:\notes:application\json:note_api-config">
+        <ee:transform doc:name="Transform Message" doc:id="c835f8c9-796b-430b-8531-04398669b208">
+            <ee:message />
+            <ee:variables>
+                <ee:set-variable variableName="insetMgtNote"><![CDATA[%dw 2.0
+output application/json
+var upsert = now() as String {format: "yyyy-MM-dd"}
+---
+{
+  title: payload.title, 
+  content: payload.content,  
+  createdAt: upsert,
+  updatedAt: upsert	
+}]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <db:insert doc:id="e3adf3db-f94c-4ce7-b8bc-c9a303138de1" config-ref="Database_Config">
+            <db:sql><![CDATA[insert into b37_last_assignment(title,content,createdAt,updatedAt) values(:title,:content,:createdAt,:updatedAt)]]></db:sql>
+            <db:input-parameters><![CDATA[#[vars.insetMgtNote]]]></db:input-parameters>
+        </db:insert>
+        <ee:transform doc:name="Transform Message" doc:id="bcc8c39b-f3b6-46cb-84d1-5c8c1fff2a6d">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+	</mule>

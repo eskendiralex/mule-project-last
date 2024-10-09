@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+	<error-handler name="global-error-handler" doc:id="49b40f39-3c88-49fb-ad49-66e1e02285c9">
+            		<on-error-propagate type="APIKIT:BAD_REQUEST">
+                <set-variable value="#[400]" doc:name="Set HttpStatus" doc:id="7b994c36-4e06-47a8-8c65-5c004a3cca53" variableName="httpStatus"/>
+			<set-variable value='#["Bad Request"]' doc:name="Set errorMessage" doc:id="4bceba51-4bc2-4fab-9d03-cf06297934a8" variableName="errorMessage"/>
+			<set-variable value="#[error.description]" doc:name="Set errorDescription" doc:id="16e0d4e4-fa0f-4f7f-bf72-f5cfe8190c97" variableName="errorDescription"/>
+			<ee:transform doc:name="Transform Message" doc:id="dba731a4-34c3-469e-8f41-16c7ea2d7fbb" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code":vars.httpStatus,
+	"message":vars.errorMessage,
+	"description":vars.errorDescription,
+	"dateTime":now() as String {format: "yyyy-MM-dd'T'HH:mm:ss'Z'"}
+	}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+			<set-variable value="#[404]" doc:name="Set HttpStatus" doc:id="fb929313-e8e9-40ea-8cca-207c8740e23b" variableName="httpStatus" />
+			<set-variable value='#["Not Found"]' doc:name="Set errorMessage" doc:id="0ee37177-1d15-498f-82c5-416a144bfd0e" variableName="errorMessage" />
+			<set-variable value="#[error.description]" doc:name="Set errorDescription" doc:id="44f283a2-db7e-40f4-8bfa-d549be2e3a6b" variableName="errorDescription" />
+			<ee:transform doc:name="Transform Message" doc:id="d149798d-8c18-4c31-8d53-c08ba13ebba2">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code":vars.httpStatus,
+	"message":vars.errorMessage,
+	"description":vars.errorDescription,
+	"dateTime":now() as String {format: "yyyy-MM-dd'T'HH:mm:ss'Z'"}
+	}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+			<set-variable value="#[405]" doc:name="Set HttpStatus" doc:id="5350a297-b650-4aff-961d-91fbeb4c053d" variableName="httpStatus" />
+			<set-variable value='#["Method Not Allowed"]' doc:name="Set errorMessage" doc:id="14ec22c7-f46f-45d5-a302-817cf096f332" variableName="errorMessage" />
+			<set-variable value="#[error.description]" doc:name="Set errorDescription" doc:id="c19bccfc-e938-4784-a038-adc34e6a5284" variableName="errorDescription" />
+			<ee:transform doc:name="Transform Message" doc:id="0a296dd8-f328-4067-8597-e6eefd3ce841" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code":vars.httpStatus,
+	"message":vars.errorMessage,
+	"description":vars.errorDescription,
+	"dateTime":now() as String {format: "yyyy-MM-dd'T'HH:mm:ss'Z'"}
+	}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+			<set-variable value="#[406]" doc:name="Set HttpStatus" doc:id="83b9f990-ed65-4a78-a95a-a93916bcbc68" variableName="httpStatus" />
+			<set-variable value='#["Not Acceptable"]' doc:name="Set errorMessage" doc:id="22872e0c-9eb4-4007-b781-6dfc7f36e4f1" variableName="errorMessage" />
+			<set-variable value="#[error.description]" doc:name="Set errorDescription" doc:id="3db6d434-d23b-499a-a8bd-b5bb1afa2f28" variableName="errorDescription" />
+			<ee:transform doc:name="Transform Message" doc:id="d9a34e67-9bc7-4ffe-8a02-d27f9c20aa92" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code":vars.httpStatus,
+	"message":vars.errorMessage,
+	"description":vars.errorDescription,
+	"dateTime":now() as String {format: "yyyy-MM-dd'T'HH:mm:ss'Z'"}
+	}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+			<set-variable value="#[415]" doc:name="Set HttpStatus" doc:id="8a419ee8-61f1-44a6-8009-eccab9a7577d" variableName="httpStatus" />
+			<set-variable value='#["Unsupported Media Type"]' doc:name="Set errorMessage" doc:id="30d86ca2-4402-479c-926a-09abe7e4d078" variableName="errorMessage" />
+			<set-variable value="The server is refusing to service the request  because the entity of the request is in a format not supported by the requested resource for the requested method" doc:name="Set errorDescription" doc:id="9a4c4ac8-e04a-4d1f-b0bc-e729da1c596b" variableName="errorDescription" />
+			<ee:transform doc:name="Transform Message" doc:id="f125171d-904e-4727-93ce-237b23f8dc8a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code":vars.httpStatus,
+	"message":vars.errorMessage,
+	"description":vars.errorDescription,
+	"dateTime":now() as String {format: "yyyy-MM-dd'T'HH:mm:ss'Z'"}
+	}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+			<set-variable value="#[501]" doc:name="Set HttpStatus" doc:id="3c9df617-c2f6-4f3f-990c-23496526f7d2" variableName="httpStatus" />
+			<set-variable value='#["Not Implemented"]' doc:name="Set errorMessage" doc:id="0c86cf9e-6aae-4475-8449-d805b331b291" variableName="errorMessage" />
+			<set-variable value="The server is refusing to service the request  because the entity of the request is in a format not supported by the requested resource for the requested method" doc:name="Set errorDescription" doc:id="77e1bb18-ff60-45c6-97d2-34b7ee3f79b0" variableName="errorDescription" />
+			<ee:transform doc:name="Transform Message" doc:id="f3f7aca5-791d-4ac1-a8f1-ae214551dffa" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code":vars.httpStatus,
+	"message":vars.errorMessage,
+	"description":vars.errorDescription,
+	"dateTime":now() as String {format: "yyyy-MM-dd'T'HH:mm:ss'Z'"}
+	}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+
+            </on-error-propagate>
+        </error-handler>
+		</mule>
