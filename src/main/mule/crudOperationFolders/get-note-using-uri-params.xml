@@ -20,13 +20,16 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-payload map{
+if (!isEmpty(payload))
+  payload map{
 	id:$.id,
 	title:$.title,
 	content:$.content,
 	updatedAr:$.updatedAt,
 	createdAt:$.createdAt
-}]]></ee:set-payload>
+	} else
+	"the data isn't available in the data base"
+]]></ee:set-payload>
             </ee:message>
         </ee:transform>
     </flow>
